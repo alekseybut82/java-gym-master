@@ -37,8 +37,8 @@ public class Timetable {
     public List<Map.Entry<Coach, Integer>> getCountByCoaches() {
         Map<Coach, Integer> countByCoachTraining = new HashMap<>();
         for(Map<TimeOfDay, List<TrainingSession>> trainingSessionsForDay: timetable.values()) {
-            for(List<TrainingSession> trainingSessionsForTime: trainingSessionsForDay.values()) {
-                for(TrainingSession trainingSession: trainingSessionsForTime) {
+        for(List<TrainingSession> trainingSessionsForTime: trainingSessionsForDay.values()) {
+        for(TrainingSession trainingSession: trainingSessionsForTime) {
                     Coach coach = trainingSession.getCoach();
                     countByCoachTraining.put(coach, countByCoachTraining.getOrDefault(coach,0) + 1);
                 }
