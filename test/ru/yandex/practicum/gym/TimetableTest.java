@@ -61,8 +61,6 @@ public class TimetableTest {
                                 , new TimeOfDay(13, 0));
         Assertions.assertEquals(((TreeMap<TimeOfDay, List<TrainingSession>>) timetable.getTrainingSessionsForDay(DayOfWeek.THURSDAY)).lastKey()
                                 , new TimeOfDay(20, 0));
-
-
     }
 
     @Test
@@ -81,6 +79,28 @@ public class TimetableTest {
         Assertions.assertEquals(timetable.getTrainingSessionsForDayAndTime(DayOfWeek.MONDAY, new TimeOfDay(13, 0)).size(), 1);
         Assertions.assertTrue(timetable.getTrainingSessionsForDayAndTime(DayOfWeek.MONDAY, new TimeOfDay(14, 0)).isEmpty());
     }
+
+    @Test
+    public void testGetTrainingSessionsForDayAndTimeMultipleSessionsInSameDayTime() {
+        Timetable timetable = new Timetable();
+        Group group = new Group("Акробатика для детей", Age.CHILD, 60);
+        TimeOfDay timeOfDay = new TimeOfDay(13, 0);
+        Coach coach1 = new Coach("Васильев", "Николай", "Сергеевич");
+        Coach coach2 = new Coach("Петров", "Петр", "Петрович");
+        Coach coach3 = new Coach("Егоров", "Егор", "Егорович");
+
+        for (Coach coach: List.of(coach1, coach2, coach3)) {
+            timetable.addNewTrainingSession(new TrainingSession(
+                    group
+                    , coach
+                    , DayOfWeek.MONDAY
+                    , timeOfDay)
+            );
+        }
+
+        Assertions.assertEquals(timetable.getTrainingSessionsForDayAndTime(DayOfWeek.MONDAY, new TimeOfDay(13, 0)).size(), 3);
+    }
+
 
     @Test
     public void testGetCountByCoachesWithSingleCoach() {
@@ -119,7 +139,7 @@ public class TimetableTest {
                 , timeOfDay)
         );
 
-        for(DayOfWeek dayOfWeek: List.of(DayOfWeek.MONDAY, DayOfWeek.TUESDAY)) {
+        for (DayOfWeek dayOfWeek: List.of(DayOfWeek.MONDAY, DayOfWeek.TUESDAY)) {
             timetable.addNewTrainingSession(new TrainingSession(
                     group
                     , coach2
@@ -128,7 +148,7 @@ public class TimetableTest {
             );
         }
 
-        for(DayOfWeek dayOfWeek: List.of(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.THURSDAY)) {
+        for (DayOfWeek dayOfWeek: List.of(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.THURSDAY)) {
             timetable.addNewTrainingSession(new TrainingSession(
                     group
                     , coach3
@@ -142,6 +162,8 @@ public class TimetableTest {
         Assertions.assertEquals(listOfCoachAndCountTraining.size(), 3);
         Assertions.assertEquals(listOfCoachAndCountTraining.get(0).getValue(), 3);
         Assertions.assertEquals(listOfCoachAndCountTraining.get(0).getKey(), coach3);
+        Assertions.assertEquals(listOfCoachAndCountTraining.get(2).getValue(), 1);
+        Assertions.assertEquals(listOfCoachAndCountTraining.get(2).getKey(), coach1);
     }
 
 }
